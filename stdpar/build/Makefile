@@ -1,11 +1,11 @@
-# Build with nvc++, with parallel algorithm support turned on.
+# Build with dpcpp, with parallel algorithm support turned on.
 
 SHELL = /bin/sh
 .SUFFIXES: .cc .o
 
 LULESH_EXEC = lulesh2.0
 
-CXX = nvc++
+CXX = dpcpp
 
 SOURCES2.0 = \
 	lulesh.cc \
@@ -15,8 +15,8 @@ SOURCES2.0 = \
 	lulesh-init.cc
 OBJECTS2.0 = $(SOURCES2.0:.cc=.o)
 
-CXXFLAGS = -w -fast -Mnouniform -Mfprelaxed -stdpar=gpu -std=c++11 -DUSE_MPI=0
-LDFLAGS = $(CXXFLAGS) 
+CXXFLAGS = -O3 -std=c++17 -ferror-limit=3 -DUSE_MPI=0 -DUSE_ONEAPI -I$(TBBROOT)/include/oneapi
+LDFLAGS = $(CXXFLAGS) -L${TBBROOT}/lib/intel64/gcc4.8 -ltbb
 
 %.o: ../src/%.cc ../src/lulesh.h
 	@echo "Building $<"
